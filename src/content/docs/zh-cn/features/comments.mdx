@@ -1,0 +1,52 @@
+---
+title: 评论系统配置
+---
+## 评论系统
+### waline
+
+[waline](https://waline.js.org/) 一款简洁、安全的评论系统。
+配置内容如下：
+
+```yaml
+waline:
+  enable: true # 是否启用
+  serverURL: "" # waline 服务端地址
+  lang: "zh-CN" # 评论界面语言
+  locale: {} # 本地化替换，详见 waline 文档
+  emoji: # 表情包，默认为 waline 官方配置
+    - https://unpkg.com/@waline/emojis@1.0.1/weibo
+    - https://unpkg.com/@waline/emojis@1.0.1/alus
+    - https://unpkg.com/@waline/emojis@1.0.1/bilibili
+    - https://unpkg.com/@waline/emojis@1.0.1/qq
+    - https://unpkg.com/@waline/emojis@1.0.1/tieba
+    - https://unpkg.com/@waline/emojis@1.0.1/tw-emoji
+  meta: # 评论可以填写的项目
+    - nick
+    - mail
+    - link
+  requiredMeta: # 评论必须填写的项目
+    - nick
+    - mail
+  wordLimit: 0 # 评论字数上限 (不建议为 0)
+  pageSize: 10 # 每页显示评论条数
+  pageview: true # 页面浏览量显示
+```
+
+### twikoo
+
+[twikoo](https://twikoo.js.org) 一个简洁、安全、免费的静态网站评论系统。
+配置内容如下：
+
+```yaml
+twikoo:
+  enable: true # 是否开启
+  mode: vercel # vercel(私有部署) 或 tencent
+  envId: "https://example.com" # twikoo 环境 ID,vercel 和私有部署填地址
+  region: # vercel 和私有部署不填，腾讯云见 twikoo 文档
+```
+
+## 注意事项
+
+ShokaX 不会支持 Valine / MiniValine，请勿提交相关功能请求
+
+对于其他评论系统，建议使用 Inject API 提供支持，ShokaX 难以长期支持非流行评论系统（或开发组内无人使用的评论系统）

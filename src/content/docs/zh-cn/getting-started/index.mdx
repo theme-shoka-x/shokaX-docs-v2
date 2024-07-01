@@ -1,0 +1,187 @@
+---
+title: 安装 ShokaX
+---
+import { Aside } from '@astrojs/starlight/components';
+
+## 在开始之前
+本文档为 ShokaX 的 Hexo 版本，请确保你想要安装基于此系统的 ShokaX
+
+为确保安装正常进行，你需要：
+- nodejs 18 或更高版本
+- 一个适合你的包管理器（我们建议使用 pnpm）
+
+为节省文档编写时间，文档内均使用 pnpm 作为示例
+
+## 使用 ShokaX 即食罐头
+<Aside type="tip">
+本方法仅适用于 ShokaX 0.4.5+ 的全新环境，对于0.4.5以下请参考后文的 ShokaX-CLI 安装
+</Aside>
+
+```bash
+git clone https://github.com/theme-shoka-x/shokax-can --depth=1
+cd shokax-can
+pnpm install
+hexo s # 如果报错更换为 pnpm dlx hexo s
+```
+现在一个 ShokaX 环境已经创建好了，通过即食罐头创建的环境无需进行配置，可直接使用，如果需要软链接请查看最后一章
+
+## 全新环境安装
+### 初始化 Hexo 环境
+#### 创建 Hexo 环境
+```bash
+pnpm add hexo-cli -g
+# cd your_path
+hexo init
+# 如果报错: pnpm dlx hexo init
+```
+此时，你已经创建了一个基于 yarn 包管理器的 hexo 环境
+我们建议通过以下方法更换为 pnpm:
+```bash
+# 请自行删除对应文件夹内的 node_modules 和 yarn.lock
+pnpm install
+```
+
+#### 使用包管理器安装 ShokaX
+<Aside type='tip'>
+这是 ShokaX 0.5 中提出的安装方式，对于 0.4.x 或更低版本请使用 ShokaX-CLI 安装
+</Aside>
+
+WIP，ShokaX 0.5 尚未发布
+
+#### 使用 ShokaX-CLI 安装 ShokaX
+{/* <Aside type='caution'>
+根据 ShokaX 生命周期计划，ShokaX-CLI 将于不晚于 2025 年 6 月正式弃用，新用户请参考上文的包管理器或初始化示例安装
+</Aside> */}
+
+```bash
+pnpm add shokax-cli -g
+# hexo init
+SXC install shokaX
+```
+
+#### 使用 git 安装 ShokaX
+
+WIP
+
+## 前置配置
+<Aside type='caution'>
+请注意：
+- Windows 或 Mac OS 用户且不使用 CI 工作流部署的可无视本条
+- Linux 用户请注意修改所有和 ShokaX 有关内容时使用 `shokax`，例如主题配置文件应当是`_config.shokax.yml`，主题应该是`theme: shokax`，如果需要在 github pages/netlify/vercel 等平台进行工作流部署，则也需要遵守本条
+
+另外：
+本段内容在 hexo 目录下的`_config.yml`中修改，向其中加入或修改为提供内容
+</Aside>
+
+### 必要配置
+```yml
+markdown:
+  render: # 渲染器设置
+    html: false # 过滤 HTML 标签
+    xhtmlOut: true # 使用 '/' 来闭合单标签 （比如 <br />）。
+    breaks: true # 转换段落里的 '\n' 到 <br>。
+    linkify: true # 将类似 URL 的文本自动转换为链接。
+    typographer:
+    quotes: "“”‘’"
+  plugins: # markdown-it 插件设置
+    - plugin:
+        name: markdown-it-toc-and-anchor
+        enable: true
+        options: # 文章目录以及锚点应用的 class 名称，shoka 系主题必须设置成这样
+          tocClassName: "toc"
+          anchorClassName: "anchor"
+    - plugin:
+        name: markdown-it-multimd-table
+        enable: true
+        options:
+          multiline: true
+          rowspan: true
+          headerless: true
+    - plugin:
+        name: ./markdown-it-furigana
+        enable: true
+        options:
+          fallbackParens: "()"
+    - plugin:
+        name: ./markdown-it-spoiler
+        enable: true
+        options:
+          title: "你知道得太多了"
+```
+
+### 推荐配置
+#### 文件压缩
+ShokaX 默认压缩器推荐配置：
+```yml
+minify:
+  js:
+    enable: false # ShokaX 自带 esbuild 优化，不建议开启，其他主题建议开启
+    exclude: # 排除文件，接受 string[]，需符合 micromatch 格式
+  css:
+    enable: true # 开启 CSS 优化
+    options:
+      targets: ">= 0.5%" # browserslist 格式的 target
+    exclude: # 排除文件，接受 string[]，需符合 micromatch 格式
+  html:
+    minifier: html-minifier
+    enable: true # 开启 HTML 优化
+    options:
+      comments: false # 是否保留注释内容
+    exclude: # 排除文件，接受 string[]，需符合 micromatch 格式
+  image:
+    enable: true # 开启图片预处理和自动 WebP 化
+    options:
+      avif: false
+      webp: true # 预留配置项，现版本无作用
+      quality: 80 # 质量，支持1-100的整数、lossless或nearLossless
+      effort: 2 # CPU 工作量，0-6之间的整数(越低越快)
+      replaceSrc: false # 自动替换生成html中的本地图片链接为webp链接
+      # 对于使用 CI 工作流部署的用户，请注意本配置可能导致图片 404，如果出现请关闭
+      # 我们更建议使用 Service Worker 来在用户侧实现 replaceSrc 的功能，这将能够以一种侵入式更小的方式实现链接替换
+    exclude:
+```
+
+<Aside type="danger">
+`minify.html`自0.1.5起添加`minifier`选项，允许使用：
+- `html-minifier`：更稳定
+- `minify-html`：更快
+
+但由于 [minify-html#181](https://github.com/wilsonzlin/minify-html/issues/181) 和 [minify-html#170](https://github.com/wilsonzlin/minify-html/issues/170)，
+**minify-html 并不可靠，且大概率会产生错误的 html（例[ShokaX#220](https://github.com/theme-shoka-x/hexo-theme-shokaX/issues/220) 和 [ShokaX#243](https://github.com/theme-shoka-x/hexo-theme-shokaX/discussions/243)）**
+**无论如何，不建议在上述问题修复前使用`minify-html`**
+
+如果您正在使用 0.1.4 或更早版本或使用`minify-html`缩小器时页面渲染错误，将缩小器调整为`html-minifier`大概率能修复
+</Aside>
+
+#### feed 生成
+
+```yml
+feed:
+  limit: 20
+  order_by: "-date"
+  tag_dir: false
+  category_dir: false
+  rss:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/rss.ejs"
+    output: "rss.xml"
+  atom:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/atom.ejs"
+    output: "atom.xml"
+  jsonFeed:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/json.ejs"
+    output: "feed.json"
+```
+
+## 配置建议
+
+为了方便操作，建议为本主题文件夹创建软链接。
+
+| 终端        | 命令                                                         |
+| ----------- | ------------------------------------------------------------ |
+| Windows CMD | `mklink /J .\themes\shokax .\node_modules\hexo-theme-shokax` |
+| Linux Bash  | `cd ../themes && ln -s ../node_modules/hexo-theme-shokax shokax` |
+
+此时可从`themes/shokax`访问本主题文件

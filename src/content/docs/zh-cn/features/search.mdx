@@ -1,0 +1,41 @@
+---
+title: 搜索功能
+---
+import { Aside } from '@astrojs/starlight/components';
+
+## Algolia 搜索
+在 hexo 根目录 `_config.yml` 中加入如下内容：
+```yml
+algolia:
+  appId: #Your appId
+  apiKey: #Your apiKey
+  adminApiKey: #Your adminApiKey
+  chunkSize: 5000
+  indexName: #"shokaX"
+  fields:
+    - title #必须配置
+    - path #必须配置
+    - categories #推荐配置
+    - content:strip:truncate,0,2000
+    - gallery
+    - photos
+    - tags
+```
+流程如下：
+
+- 登录 [Algolia](https://www.algolia.com/) 官网，建议使用 Github/Google 账号注册/登录。
+- 进入 `Dashboard` - `Search` - `Index` 页面，选择上方 `+ Create Index` 创建索引，索引名称建议为 `shokaX`。
+- 进入 `Dashboard` - `Settings` - `API Keys` 页面，复制如下数据到上方配置中。
+
+| 页面数据              | 对应配置      |
+| :-------------------- | :------------ |
+| `Application ID`      | `appId`       |
+| `Search-Only API Key` | `apiKey`      |
+| `Admin API Key`       | `adminApiKey` |
+| 创建的索引名          | `indexName`   |
+
+- 在博客部署前运行 `hexo algolia` 上传索引，可在 `Dashboard` - `Search` - `Index` 页面中查看。
+
+<Aside type="caution">
+请勿将 `apiKey` 和 `adminApiKey` 混用，否则索引可能被攻击！
+</Aside>
