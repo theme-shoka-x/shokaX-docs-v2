@@ -6,9 +6,9 @@ export default defineConfig({
 	site: "https://hexo.docs.shokax.top",
 	integrations: [
 		starlight({
-			defaultLocale: 'zh-cn',
+			defaultLocale: 'root',
 			locales: {
-				'zh-cn': {
+				'root': {
 					label: '简体中文',
 					lang: 'zh-CN'
 				},
@@ -19,7 +19,7 @@ export default defineConfig({
 			},
 			title: 'ShokaX Docs',
 			social: {
-				github: 'https://github.com/withastro/starlight',
+				github: 'https://github.com/theme-shoka-x/shokaX-docs-v2',
 			},
 			sidebar: [
 					{
