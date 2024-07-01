@@ -3,7 +3,7 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://hexo.docs.shokax.top",
+	site: "https://docs-hexo.shokax.top",
 	integrations: [
 		starlight({
 			defaultLocale: 'root',
