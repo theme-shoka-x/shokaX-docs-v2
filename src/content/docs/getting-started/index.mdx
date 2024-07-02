@@ -62,7 +62,7 @@ SXC install shokaX
 <Aside type='tip'>
 通过 git 方式安装时，我们建议 Fork 一个 ShokaX 的 Github 仓库并从你的 fork 版本 clone，这会极大降低修改主题后升级的难度 \
 同时，ShokaX 的 git 方式安装并不是为普通用户准备的，此流程比 npm 或即食罐头更复杂且可能出现其他错误 \
-** git 方式必须安装 pnpm **，不需要使用 pnpm 作为包管理器，但需要全局安装并添加到 path
+**git 方式必须安装 pnpm**，不需要使用 pnpm 作为包管理器，但需要全局安装并添加到 path
 </Aside>
 
 ```bash
@@ -93,6 +93,7 @@ node ./themes/shokax/toolbox/hoistdep.mjs
 </Aside>
 
 ### 必要配置
+#### markdown 配置
 ```yml
 markdown:
   render: # 渲染器设置
@@ -128,6 +129,24 @@ markdown:
           title: "你知道得太多了"
 ```
 
+#### 停用代码高亮
+
+停用默认代码高亮（小于等于`6.3.0`）:
+
+```yaml
+highlight:
+  enable: false
+
+prismjs:
+  enable: false
+```
+
+停用默认代码高亮（大于等于`7.0.0-rc1`）：
+
+```yaml
+syntax_highlighter: false
+```
+
 ### 推荐配置
 #### 文件压缩
 ShokaX 默认压缩器推荐配置：
@@ -148,7 +167,7 @@ minify:
       comments: false # 是否保留注释内容
     exclude: # 排除文件，接受 string[]，需符合 micromatch 格式
   image:
-    enable: true # 开启图片预处理和自动 WebP 化
+    enable: false # 开启图片预处理和自动 WebP 化
     options:
       avif: false
       webp: true # 预留配置项，现版本无作用
