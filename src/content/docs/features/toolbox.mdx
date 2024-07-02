@@ -1,0 +1,24 @@
+---
+title: 工具箱
+---
+
+# Toolbox
+ShokaX Toolbox 是随 ShokaX 本体分发的工具程序集合，各个版本间的 Toolbox 不建议交叉使用
+Toolbox 使用 ESM 模块系统，针对 node 编写并测试，其他平台无法运行可提出 Issue 或自行改写
+
+Toolbox 通常不是为一般用户准备的，因而不提供配置文件和命令行，只能通过修改常量`CONFIG`修改配置
+
+## 编译器
+位置: `shokax/toolbox/compiler.mjs`
+
+编译器用于将 ShokaX Scripts 中的 Typescript 编译为 node 可运行的 javascript cjs \
+需要 pnpm 运行，会使用 pnpm dlx 运行 tsc / esbuild 来完成编译 \
+
+## 依赖提升
+位置: `shokax/toolbox/hoistdep.mjs`
+
+用于在 pnpm 等包管理器下将 ShokaX 依赖提升到 Hexo 根目录下 \
+会自动寻找正在使用的包管理器来安装依赖 \
+理论上会在 preinstall / install 时运行，但部分包管理器会选择性忽视或缓存结果导致实际上未运行
+
+
