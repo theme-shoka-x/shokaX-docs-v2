@@ -27,7 +27,6 @@ hexo s # 如果报错更换为 pnpm dlx hexo s
 
 ## 全新环境安装
 ### 初始化 Hexo 环境
-#### 创建 Hexo 环境
 ```bash
 pnpm add hexo-cli -g
 # cd your_path
@@ -40,7 +39,7 @@ hexo init
 # 请自行删除对应文件夹内的 node_modules 和 yarn.lock
 pnpm install
 ```
-
+### 安装 ShokaX
 #### 使用包管理器安装 ShokaX
 <Aside type='tip'>
 这是 ShokaX 0.5 中提出的安装方式，对于 0.4.x 或更低版本请使用 ShokaX-CLI 安装
@@ -60,8 +59,28 @@ SXC install shokaX
 ```
 
 #### 使用 git 安装 ShokaX
+<Aside type='tip'>
+通过 git 方式安装时，我们建议 Fork 一个 ShokaX 的 Github 仓库并从你的 fork 版本 clone，这会极大降低修改主题后升级的难度 \
+同时，ShokaX 的 git 方式安装并不是为普通用户准备的，此流程比 npm 或即食罐头更复杂且可能出现其他错误 \
+** git 方式必须安装 pnpm **，不需要使用 pnpm 作为包管理器，但需要全局安装并添加到 path
+</Aside>
 
-WIP
+```bash
+cd themes
+git clone https://github.com/theme-shoka-x/hexo-theme-shokaX.git # 可替换为你自己的项目
+# 将 clone 完的文件夹改名为 shokax，下文均使用此名称
+cd shokax
+node ./toolbox/compiler.mjs
+# 耐心等待编译完成
+cd ../..
+hexo s # 或 pnpm dlx hexo s
+# 如果出现依赖项错误，运行：
+node ./themes/shokax/toolbox/hoistdep.mjs
+# 等待运行完成后，问题通常会解决
+```
+
+此时将`theme`修改`shokax`后就可以使用 ShokaX 了
+
 
 ## 前置配置
 <Aside type='caution'>
