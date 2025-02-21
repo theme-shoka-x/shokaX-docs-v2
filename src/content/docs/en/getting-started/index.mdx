@@ -1,0 +1,221 @@
+---
+title: Installing ShokaX
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Before You Begin
+This document is for the Hexo version of ShokaX. Please make sure you are installing ShokaX based on this system.
+
+To ensure a smooth installation, you will need:
+- Node.js version 18 or higher
+- A suitable package manager (we recommend using pnpm)
+
+For the sake of saving time in writing the documentation, pnpm is used as the example in this guide.
+
+## Using ShokaX Instant Cans
+<Aside type="tip">
+This method is only applicable to fresh ShokaX environments version 0.4.5+; for versions below 0.4.5, please refer to the ShokaX-CLI installation guide below.
+</Aside>
+
+```bash
+git clone https://github.com/theme-shoka-x/shokax-can --depth=1
+cd shokax-can
+pnpm install
+hexo s # If you encounter errors, use pnpm dlx hexo s
+```
+Now a ShokaX environment has been created. The environment created using the instant can is ready to use without any configuration. If you need to create a soft link, refer to the last section of the document.
+
+## Fresh Environment Installation
+### Initializing Hexo Environment
+```bash
+pnpm add hexo-cli -g
+# cd your_path
+hexo init
+# If you encounter an error: pnpm dlx hexo init
+```
+At this point, you have created a Hexo environment based on the yarn package manager. We recommend switching to pnpm as follows:
+```bash
+# Please delete the node_modules and yarn.lock files in the corresponding folder
+pnpm install
+```
+### Installing ShokaX
+#### Installing ShokaX via Package Manager
+```bash
+pnpm add hexo-theme-shokax
+# For npm/yarn users, you can skip this step, but pnpm users must execute:
+node ./node_modules/hexo-theme-shokax/toolbox/hoistdep.mjs
+```
+
+#### Installing ShokaX via ShokaX-CLI
+<Aside type='caution'>
+According to ShokaX's lifecycle plan, ShokaX-CLI has been deprecated. Please avoid using it for new projects.
+</Aside>
+
+```bash
+pnpm add shokax-cli -g
+SXC install shokaX
+```
+
+#### Installing ShokaX via Git
+<Aside type='tip'>
+When installing via Git, we recommend forking a ShokaX GitHub repository and cloning from your fork. This will significantly reduce the difficulty of upgrading after modifying the theme. \
+Additionally, ShokaX's git-based installation is not intended for regular users. This process is more complex than using npm or the instant can method and may encounter additional errors.
+</Aside>
+
+```bash
+cd themes
+git clone https://github.com/theme-shoka-x/hexo-theme-shokaX.git # You may replace it with your own project
+# Rename the cloned folder to shokax; this name will be used in the following steps
+cd shokax
+node ./toolbox/compiler.mjs
+# Be patient while the compilation is completed
+cd ../..
+hexo s # Or use pnpm dlx hexo s
+# pnpm users must run the following command. For yarn/npm users encountering dependency issues, you can run:
+node ./themes/shokax/toolbox/hoistdep.mjs
+# After the process is complete, the issue will usually be resolved.
+```
+
+At this point, modify `theme` to `shokax`, and ShokaX is ready to use.
+
+## Preliminary Configuration
+<Aside type='caution'>
+Please note:
+- Windows or Mac OS users who do not use CI workflows can ignore this section.
+- Linux users must ensure that all configurations related to ShokaX use `shokax`. For example, the theme configuration file should be `_config.shokax.yml`, and the theme should be set to `theme: shokax`. If deploying on platforms like GitHub Pages, Netlify, or Vercel, this rule should also be followed.
+
+Additionally:
+This section involves modifying the `_config.yml` in the Hexo directory. Add or modify the content as specified below.
+</Aside>
+
+Change the `theme` in `_config.yml` to `shokax`, and modify `_config.landscape.yml` to `_config.shokax.yml`.
+
+### Necessary Configuration
+#### Markdown Configuration
+```yml
+markdown:
+  render: # Renderer settings
+    html: false # Filter HTML tags
+    xhtmlOut: true # Use '/' to close self-closing tags (e.g., <br />).
+    breaks: true # Convert '\n' within paragraphs to <br>.
+    linkify: true # Automatically convert text resembling URLs to links.
+    typographer:
+    quotes: "“”‘’"
+  plugins: # markdown-it plugin settings
+    - plugin:
+        name: markdown-it-toc-and-anchor
+        enable: true
+        options: # The class names for the table of contents and anchors; ShokaX-based themes must use these settings
+          tocClassName: "toc"
+          anchorClassName: "anchor"
+    - plugin:
+        name: markdown-it-multimd-table
+        enable: true
+        options:
+          multiline: true
+          rowspan: true
+          headerless: true
+    - plugin:
+        name: ./markdown-it-furigana
+        enable: true
+        options:
+          fallbackParens: "()"
+    - plugin:
+        name: ./markdown-it-spoiler
+        enable: true
+        options:
+          title: "You know too much"
+```
+
+#### Disable Code Highlighting
+
+To disable default code highlighting `(version <= 6.3.0)`:
+
+```yaml
+highlight:
+  enable: false
+
+prismjs:
+  enable: false
+```
+
+To disable default code highlighting (version >= `7.0.0-rc1`):
+
+```yaml
+syntax_highlighter: false
+```
+
+### Recommended Configuration
+#### File Compression
+Recommended configuration for ShokaX’s built-in compressor:
+```yml
+minify:
+  js:
+    enable: false # ShokaX uses esbuild optimization by default, do not enable this; other themes may benefit from enabling.
+    exclude: # Exclude files, accepts string[] in micromatch format
+  css:
+    enable: true # Enable CSS optimization
+    options:
+      targets: ">= 0.5%" # browserslist format target
+    exclude: # Exclude files, accepts string[] in micromatch format
+  html:
+    minifier: html-minifier
+    enable: true # Enable HTML optimization
+    options:
+      comments: false # Whether to keep comments
+    exclude: # Exclude files, accepts string[] in micromatch format
+  image:
+    enable: false # Enable image preprocessing and automatic WebP conversion
+    options:
+      avif: false
+      webp: true # Reserved configuration, has no effect in the current version
+      quality: 80 # Quality, supports integers between 1-100, lossless or nearLossless
+      effort: 2 # CPU workload, an integer between 0-6 (lower is faster)
+      replaceSrc: false # Automatically replace local image links in HTML with WebP links
+      # For users deploying with CI workflows, note that this may cause 404 errors for images. If this occurs, please disable it.
+      # We recommend using Service Worker to achieve the replaceSrc functionality on the client side, which will enable non-intrusive link replacement.
+    exclude:
+```
+
+<Aside type="danger">
+`minify.html` introduced the `minifier` option since version 0.1.5, allowing the use of:
+- `html-minifier`: More stable
+- `minify-html`: Faster
+
+However, due to issues such as [minify-html#181](https://github.com/wilsonzlin/minify-html/issues/181) and [minify-html#170](https://github.com/wilsonzlin/minify-html/issues/170), **minify-html is unreliable and likely to produce incorrect HTML** (e.g., see [ShokaX#220](https://github.com/theme-shoka-x/hexo-theme-shokaX/issues/220) and [ShokaX#243](https://github.com/theme-shoka-x/hexo-theme-shokaX/discussions/243)).
+
+**We do not recommend using `minify-html` until the issues are resolved.**
+
+If you're using version 0.1.4 or earlier, or if you encounter rendering errors when using the `minify-html` minifier, switching the minifier to `html-minifier` will likely resolve the issue.
+</Aside>
+
+#### Feed Generation
+
+```yml
+feed:
+  limit: 20
+  order_by: "-date"
+  tag_dir: false
+  category_dir: false
+  rss:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/rss.ejs"
+    output: "rss.xml"
+  atom:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/atom.ejs"
+    output: "atom.xml"
+  jsonFeed:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/json.ejs"
+    output: "feed.json"
+```
+
+## Configuration Recommendations
+
+For easier management, we recommend creating a symbolic link for the theme folder.
+
+| Terminal       | Command                                                        |
+| Windows CMD | `mklink /J .\themes\shokax .\node_modules\hexo-theme-shokax` |
+| Linux Bash  | `cd ../themes && ln -s ../node_modules/hexo-theme-shokax shokax` |
