@@ -5,7 +5,7 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-    site: "https://hexo.docs.shokax.top",
+    site: "https://docs.shokax.kaitaku.xyz",
     integrations: [starlight({
         head: [
             {
@@ -30,9 +30,9 @@ export default defineConfig({
                 lang: 'en'
             }
         },
-        title: 'ShokaX Docs',
+        title: 'ShokaX',
         social: {
-            github: 'https://github.com/theme-shoka-x/shokaX-docs-v2',
+            github: 'https://github.com/theme-shoka-x/hexo-theme-shokaX',
         },
         sidebar: [
                 {

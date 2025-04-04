@@ -1,0 +1,19 @@
+{
+  "caches": [
+    {
+      "source": "/_astro/*",
+      "cacheTtl": 31536000
+    }
+  ],
+  "headers": [
+    {
+      "source": "/_astro/*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "max-age=31536000,immutable,public"
+        }
+      ]
+    }
+  ]
+}
