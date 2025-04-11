@@ -19,6 +19,9 @@ export default defineConfig({
                 `
             }
         ],
+        components: {
+            Footer: './src/components/Footer.astro',
+        },
         defaultLocale: 'root',
         locales: {
             'root': {
