@@ -374,4 +374,13 @@ categories:
   - [计算机科学, C++, 郑莉老师C++语言程序设计]
 ```
 
-3、在最底部的文件目录放置 `cover.jpg` 文件，此图片将作为首页精选的图片。自此 `文章精选` 和 `鼠标悬浮翻转` 也将实现。
+3、在最底部的文件目录放置 `cover.jpg` 文件，此图片将作为首页精选的图片。
+4、在主题的配置中，找到`homeConfig.cateCards`配置，添加slug与cover，slug即为上述`category_map`映射后，以`_posts`为基准路径的路径，cover为封面以`_posts`为基准的所在位置
+如：
+```yaml
+homeConfig:
+  cateCards:
+    - slug: computer-science/cpp/course-1
+      cover: computer-science/cpp/course-1/cover.jpg
+```
+随后便可生成首页精选分类

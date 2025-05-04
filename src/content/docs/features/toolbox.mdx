@@ -12,12 +12,16 @@ Toolbox 通常不是为一般用户准备的，因而不提供配置文件和命
 
 编译器用于将 ShokaX Scripts 中的 Typescript 编译为 node 可运行的 javascript cjs \
 
-
 ## 依赖提升
 位置: `shokax/toolbox/hoistdep.mjs`
 
 用于在 pnpm 等包管理器下将 ShokaX 依赖提升到 Hexo 根目录下 \
-会自动寻找正在使用的包管理器来安装依赖 \
-理论上会在 preinstall / install 时运行，但部分包管理器会选择性忽视或缓存结果导致实际上未运行
+会自动寻找正在使用的包管理器来安装依赖
+
+## 开发版本生成
+位置: `shokax/toolbox/dev-version.mjs`
+
+用于自动在 package.json 的版本号上追加 Git 短哈希 \
+通常用于自动发布 Dev 版本流程中
 
 
